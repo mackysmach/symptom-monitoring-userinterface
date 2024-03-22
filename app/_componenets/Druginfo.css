@@ -1,0 +1,26 @@
+/* CSS for transitions */
+.form-group-transition {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.form-group-transition.show {
+    max-height: 1000px;
+    /* Adjust the value based on your content */
+    transition: max-height 0.3s ease-in;
+
+}
+
+.tooltip-inner{
+    background-color: lightgrey;
+    color: darkslategrey;
+    padding: 15px;
+    max-width: fit-content;
+    text-align: left;
+    box-shadow: inset;
+
+}
+.form-control::placeholder {
+    color: rgba(0, 0, 0, 0.4); /* Adjust the color and opacity as needed */
+}
