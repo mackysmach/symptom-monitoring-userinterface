@@ -4,21 +4,36 @@ import { Image, Container, Row, Col } from 'react-bootstrap';
 import Link from 'next/link';
 import { getallpet } from '../_Handlers/Getallpet';
 import { useMyContext } from '../_Handlers/Mycontext';
+import { getpetimg } from '../_Handlers/Getpetimg';
+
+
+    
+    async function fetchData(userID, setPets) {
+        try {
+            const pets = await getallpet(userID)
+            let i = 0
+            for (const pet of pets) {
+                let imageURL = await getpetimg(pet.pet_id)
+                pets[i] = { ...pet, image: imageURL }
+                i++
+            }
+    
+            setPets(pets)
+        } catch (error) {
+            console.error(error)
+        }
+    }
 
 const Petprofile = ({ user }) => {
     const { trigger, setTrigger } = useMyContext();
     const [pets, setPets] = useState([]);
+    const [imgurl,setimgurl] = useState('')
+    const [petImages, setPetImages] = useState({});
 
     useEffect(() => {
-        getallpet(user.user_id).then(data => {
-            if (Array.isArray(data)) { // Check if data is an array
-                setPets(data);
-            } else {
-                setPets([]); // Set pets to an empty array if data is not an array
-            }
-        });
-    }, [trigger]);
-
+        fetchData(user.user_id, setPets)
+    }, [trigger])
+    
     return (
         <Container>
             <Row className="align-items-center text-center">
@@ -27,7 +42,7 @@ const Petprofile = ({ user }) => {
                         <Link href={`/Account/${item.pet_id}`}>
                             <div style={{ position: 'relative', width: '150px', height: '150px', borderRadius: '50%', overflow: 'hidden', margin: 'auto' }}>
                                 <Image
-                                    src={user.photo}
+                                    src={item.image}
                                     alt={item.name}
                                     roundedCircle
                                     fluid
@@ -36,7 +51,7 @@ const Petprofile = ({ user }) => {
                             </div>
                         </Link>
                         <h4>
-                            <Link href={`/Account/${item.pet_id}`}>
+                            <Link href={`/Account/${item.pet_id}`} style={{textDecoration:'none', color:'black'}}>
                                 <p>{item.name}</p>
                             </Link>
                         </h4>
@@ -48,3 +63,5 @@ const Petprofile = ({ user }) => {
 };
 
 export default Petprofile;
+
+

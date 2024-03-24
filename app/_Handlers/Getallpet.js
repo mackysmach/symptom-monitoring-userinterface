@@ -1,14 +1,35 @@
 export const getallpet = async (user_id) => {
     try {
-
-        const config = {
-            method: "GET"
-        };
-        const res = await fetch(` http://localhost:8080/pet/all/${user_id}`, config);
-        const data = await res.json();
-        //console.log(data)
-        return data;
-    } catch (err) {
-        console.log(err);
+        const res = await fetch(`http://localhost:8080/pet/all/${user_id}`)
+        let data = await res.json()
+        switch (res.status) {
+            case 404:
+                data = []
+                break
+            case 500:
+                throw new Error(data.error)
+        }
+        return data
+    } catch (error) {
+        throw error
     }
 }
+
+
+// async function getallpet(userID) {
+//     try {
+//         const res = await fetch(`http://localhost:8080/pet/all/${userID}`)
+//         let data = await res.json()
+//         switch (res.status) {
+//             case 404:
+//                 data = []
+//                 break
+//             case 500:
+//                 throw new Error(data.error)
+//         }
+//         return data
+//     } catch (error) {
+//         throw error
+//     }
+// }
+// export default getallpet;
